@@ -28,9 +28,15 @@ public class ExplicitWaitExample {
         webDriver.findElement(By.id(agreeButton)).click();
 
         webDriver.findElement(By.name(searchBox)).sendKeys("Yahoo", Keys.ENTER);
-        // Fluent wait (not exactly working) example
-        // FluentWait<WebDriver> wait = new FluentWait<>(webDriver).withTimeout(Duration.ofSeconds(secondsToWait)).ignoring(NoSuchElementException.class);
         // TODO: add real fluent wait example later on
+        // Fluent wait (not exactly working) example (when element is not found a TimeoutException is thrown, not ignored!)
+        try {
+            FluentWait<WebDriver> waitFluent = new FluentWait<>(webDriver)
+                    .withTimeout(Duration.ofSeconds(secondsToWait)).ignoring(NoSuchElementException.class);
+            waitFluent.until(ExpectedConditions.elementToBeClickable(By.xpath(firstResult)));
+        } catch (TimeoutException e) {
+            System.out.println("Timeout exception when looking for results");
+        }
         WebElement firstSearchResult = wait.until(
                 ExpectedConditions.elementToBeClickable(By.xpath(firstResult))
         );
